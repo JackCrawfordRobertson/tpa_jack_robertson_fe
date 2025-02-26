@@ -28,7 +28,7 @@ export default function Footer() {
           <Link 
             href="https://github.com/JackCrawfordRobertson/TPA_CleanAndAnalysis" 
             target="_blank" 
-            className="hover:underline flex items-center space-x-2 text-gray-400 hover:text-white">
+            className="hover:underline flex items-center space-x-2 text-gray-400 hover:text-black">
             <Github size={18} />
             <span>Analytics GitHub</span>
           </Link>
@@ -36,7 +36,7 @@ export default function Footer() {
           <Link 
             href="https://github.com/JackCrawfordRobertson/tpa_jack_robertson_fe" 
             target="_blank" 
-            className="hover:underline flex items-center space-x-2 text-gray-400 hover:text-white">
+            className="hover:underline flex items-center space-x-2 text-gray-400 hover:text-black">
             <Code size={18} />
             <span>Frontend GitHub</span>
           </Link>
