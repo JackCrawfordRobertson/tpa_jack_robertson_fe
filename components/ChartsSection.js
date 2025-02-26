@@ -87,7 +87,7 @@ export default function ChartsSection() {
             </p>
             <h4 className="text-lg font-bold mt-4">Customer Segmentation Insights</h4>
             <p className="text-l mt-2">
-                Our K-Means clustering has identified distinct customer groups based on transaction behaviour:
+            Our K-Means clustering has revealed distinct customer behaviour patterns based on transaction activity:
             </p>
 
             <ul className="list-disc ml-6 text-l mt-2">

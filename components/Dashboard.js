@@ -139,7 +139,7 @@ export default function DashboardPage() {
                 <Label
                   content={({ viewBox }) => {
                     if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                      const total = transactionSuccessCompleted + transactionSuccessFailed;
+                      const total = 60.51;
                       return (
                         <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
                           <tspan
@@ -154,7 +154,7 @@ export default function DashboardPage() {
                             y={(viewBox.cy || 0) + 4}
                             className="fill-muted-foreground text-sm"
                           >
-                            Success + Fail
+                            Success
                           </tspan>
                         </text>
                       );
@@ -331,7 +331,7 @@ export default function DashboardPage() {
               innerRadius={80}
               outerRadius={130}
             >
-              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+              {/* <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} /> */}
               <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
                 <Label
                   content={({ viewBox }) => {
