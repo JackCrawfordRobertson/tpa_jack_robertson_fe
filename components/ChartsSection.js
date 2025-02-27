@@ -66,56 +66,51 @@ export default function ChartsSection() {
             </p>
 
             <p className="text-l mt-2">
-                K-means clustering, facilitated by numerically encoding categorical variables such as device type and
-                payment method, allowed us to group similar customers effectively. One cluster spotlights older in-store
-                shoppers (46–60) relying on smartwatches and debit cards, facing high chargeback rates. Another isolates
-                younger online credit card users (26–35) with near-perfect completion, signalling an opportunity for
-                premium loyalty incentives. Seniors relying on bank transfers for subscriptions form another cluster,
-                defined by high pending rates. This segmentation demonstrates how focusing on each group’s unique needs
-                can drive better outcomes.
-            </p>
+    K-Medoids clustering, which groups customers based on real-world transaction behaviour, allowed us to identify clear spending patterns. 
+    One cluster highlights middle-aged in-store shoppers (46–60) who primarily use debit and credit cards, indicating reliability but also 
+    notable chargeback concerns. Another cluster isolates younger online credit card users (26–35) with high transaction success rates, 
+    suggesting an opportunity for premium loyalty incentives. Seniors relying on bank transfers for subscriptions form another group, 
+    facing high pending transaction rates due to slower verification. Additionally, smartwatch-based transactions exhibit higher-than-usual 
+    failure rates, pointing to usability challenges or merchant limitations. These findings underscore the need for more tailored payment 
+    experiences to improve user satisfaction and security.
+</p>
 
-            <p className="text-l mt-2">
-                These insights yield clear recommendations. Improving smartwatch and tablet user experiences could lower
-                failure rates, especially among older or less tech-savvy users. Strengthening fraud detection for
-                digital wallets is essential for trimming chargebacks without reducing convenience. Providing simplified
-                e-wallets or faster verification may lessen older users’ reliance on slow bank transfers. For the 46–60
-                age bracket, refining dispute resolution processes could curb chargeback volumes and boost confidence.
-                Finally, mobile-first rewards could reinforce loyalty among the 26–35 segment, leveraging their high
-                completion rates for credit cards and digital apps. Rigorous data validation and consistent security
-                measures across all payment channels will foster sustained consumer trust.
-            </p>
-            <h4 className="text-lg font-bold mt-4">Customer Segmentation Insights</h4>
-            <p className="text-l mt-2">
-            Our K-Means clustering has revealed distinct customer behaviour patterns based on transaction activity:
-            </p>
+<p className="text-l mt-2">
+    These insights lead to clear recommendations. Optimising smartwatch transactions could lower failure rates, especially among 
+    older or less tech-savvy users. Strengthening fraud detection for digital wallets is crucial to reducing chargebacks without compromising 
+    convenience. Enhancing bank transfer verification may help seniors facing delays, while improving dispute resolution for the 46–60 age 
+    group could reduce chargeback rates. Lastly, introducing mobile-first rewards could drive engagement among the 26–35 digital-native 
+    segment, leveraging their strong success rates with credit cards and app-based transactions. These refinements, alongside rigorous 
+    data validation and security improvements, will reinforce consumer trust across all payment methods.
+</p>
 
-            <ul className="list-disc ml-6 text-l mt-2">
-                <li>
-                    <strong>Older In-Store Shoppers (Cluster 0)</strong>: Debit card users (46-60 years old) with high
-                    chargeback rates, often using smartwatches in-store.
-                    
-                </li>
-                <li>
-                    <strong>High-Spending Digital Credit Card Users (Cluster 1)</strong>: Online shoppers (26-35 years
-                    old) primarily using mobile and credit cards.
-                   
-                </li>
-                <li>
-                    <strong>Subscription-Based Seniors (Cluster 2)</strong>: Bank transfer users (60+ years old) with
-                    high pending transaction rates.
-                   
-                </li>
-                <li>
-                    <strong>Mobile Wallet Users In-Store (Cluster 3)</strong>: Digital wallet users (36-45 years old)
-                    making in-store purchases.
-                   
-                </li>
-                <li>
-                    <strong>Young Mobile-First App Users (Cluster 4)</strong>: 18-25-year-olds favouring mobile
-                    transactions but still using desktops.
-                </li>
-            </ul>
+<h4 className="text-lg font-bold mt-4">Customer Segmentation Insights</h4>
+
+<p className="text-l mt-2">
+    Our K-Medoids clustering analysis revealed distinct customer behaviour patterns based on transaction activity:
+</p>
+<ul className="list-disc ml-6 text-l mt-2">
+    <li>
+        <strong>Dominant Segment: Middle-Aged Card Users (Cluster 0)</strong>: 46–60-year-olds making in-store purchases with debit/credit cards.
+        Reliable transactions but with moderate chargeback risks.
+    </li>
+    <li>
+        <strong>Smartwatch Transactions with High Failures (Cluster 4)</strong>: Smartwatch users face elevated failure rates.
+        Likely due to authentication issues or limited merchant support.
+    </li>
+    <li>
+        <strong>High-Spending Digital Credit Card Users (Cluster 1)</strong>: 26–35-year-olds shopping online via mobile and credit cards.
+        High transaction success with minimal disruptions.
+    </li>
+    <li>
+        <strong>Subscription-Based Seniors (Cluster 2)</strong>: 60+ bank transfer users with high pending rates.
+        Slower verification and processing create delays.
+    </li>
+    <li>
+        <strong>Outlier Transactions (Clusters 1, 2, 3)</strong>: Low-volume but high-value transactions.
+        Possibly linked to niche purchases, fraud risks, or unusual spending patterns.
+    </li>
+</ul>
 
             {/* Stacked Bar Chart: Payment Method Breakdown */}
             <div className="mt-6">

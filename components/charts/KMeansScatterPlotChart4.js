@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScatterChart,
   Scatter,
@@ -11,7 +11,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -19,1032 +18,146 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { ChartContainer } from "@/components/ui/chart"; // Keep if you still want the ChartContainer styling
+import { Button } from "@/components/ui/button"; // ShadCN Button Component
+import { cn } from "@/lib/utils"; // ShadCN Utility for class merging
 
-// K-Means Clustered Data
-const clusterData = [
-    {
-        "x": -100.0,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 0.0,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 0.0,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 0.0,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 0.0,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 0.0,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": -98.34,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    // {
-    //     "x": -999.99,
-    //     "y": "26-35",
-    //     "size": 35,
-    //     "cluster": 1
-    // },
-    // {
-    //     "x": -999.99,
-    //     "y": "26-35",
-    //     "size": 35,
-    //     "cluster": 1
-    // },
-    // {
-    //     "x": -999.99,
-    //     "y": "26-35",
-    //     "size": 35,
-    //     "cluster": 1
-    // },
-    // {
-    //     "x": -999.99,
-    //     "y": "26-35",
-    //     "size": 35,
-    //     "cluster": 1
-    // },
-    {
-        "x": 55.7,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 65.5,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 65.8,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 75.22,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 75.89,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 85.75,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 85.95,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 85.95,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 88.2,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 95.1,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 95.25,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 95.5,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 95.85,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 95.85,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 95.89,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 98.34,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 98.34,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 105.25,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 105.75,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 105.9,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 115.4,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 115.5,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 115.85,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 120.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 125.4,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 125.9,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 135.85,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 135.85,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 145.2,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 145.25,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 145.3,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 150.45,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 155.2,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 155.9,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 165.3,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 165.4,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 170.6,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 175.45,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 180.99,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 185.2,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 185.2,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 185.2,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 185.2,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 185.2,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 185.2,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 190.75,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 195.6,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 198.75,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 205.1,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 210.6,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 210.99,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 210.99,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 215.9,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 220.2,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 220.5,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 225.85,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 235.4,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 235.95,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 240.3,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 245.1,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 245.67,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 245.67,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 245.67,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 245.67,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 245.67,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 245.67,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 245.75,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": 250.5,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 250.5,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 250.5,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 250.5,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 250.5,
-        "y": "18-25",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 250.6,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 260.2,
-        "y": "36-45",
-        "size": 31,
-        "cluster": 4
-    },
-    {
-        "x": 280.4,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 290.15,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 295.6,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 295.6,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 295.6,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 295.6,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 295.6,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 295.6,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 315.8,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 325.7,
-        "y": "60+",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 335.4,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 345.7,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 350.75,
-        "y": "46-60",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 360.25,
-        "y": "46-60",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 390.95,
-        "y": "46-60",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 395.6,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 405.75,
-        "y": "46-60",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 405.9,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 415.3,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 420.5,
-        "y": "46-60",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 425.1,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": 450.75,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 450.75,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 450.75,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 450.75,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 450.75,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 450.75,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 480.4,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 495.2,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 500.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 505.3,
-        "y": "46-60",
-        "size": 24,
-        "cluster": 0
-    },
-    {
-        "x": 640.3,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 650.0,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 655.75,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 670.25,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 685.85,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 715.55,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 725.3,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 725.85,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": 735.95,
-        "y": "36-45",
-        "size": 50,
-        "cluster": 3
-    },
-    // {
-    //     "x": 999.99,
-    //     "y": "26-35",
-    //     "size": 35,
-    //     "cluster": 1
-    // },
-    {
-        "x": -320.0,
-        "y": "60+",
-        "size": 17,
-        "cluster": 2
-    },
-    {
-        "x": -200.0,
-        "y": "26-35",
-        "size": 35,
-        "cluster": 1
-    },
-    {
-        "x": -85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": -85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": -85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": -85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    },
-    {
-        "x": -85.3,
-        "y": "18-25",
-        "size": 50,
-        "cluster": 3
-    }
-];
+// ShadCN Styled Custom Tooltip
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
 
-// Assign a unique colour per cluster
-const clusterColours = {
-    0: "hsl(var(--chart-1))",
-    1: "hsl(var(--chart-2))",
-    2: "hsl(var(--chart-3))",
-    3: "hsl(var(--chart-4))",
-    4: "hsl(var(--chart-5))",
-  };
-  
-  export default function KMeansScatterPlot() {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Customer Segmentation (K-Means)</CardTitle>
-          <CardDescription>
-            Clustered customer segments based on transaction behaviour. Excluding 5 outliers.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer
-            className="w-full h-[300px]"
-            aria-label="A scatter chart with bubble sizes corresponding to transaction amounts."
-          >
-            <ScatterChart margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
-              {/* X-axis: numeric (transaction amount) */}
-              <XAxis
-                dataKey="x"
-                name="Transaction Amount"
-                type="number"
-                label={{
-                  value: "Transaction Amount (GBP)",
-                  position: "insideBottomRight",
-                  offset: 0,
-                }}
-              />
-  
-              {/* Y-axis: categorical (age group) */}
-              <YAxis
-                dataKey="y"
-                name="Age Group"
-                type="category"
-                allowDuplicatedCategory={false}
-                label={{
-                  value: "Age Group",
-                  angle: -90,
-                  position: "insideLeft",
-                }}
-              />
-  
-              {/*
-                ZAxis: use the same transaction amount for bubble size.
-                - scale="linear" allows negative or zero amounts
-                - If you only deal with positive amounts, consider scale="sqrt"
-                  for a more subtle size difference between large amounts.
-              */}
-              <ZAxis
-                dataKey="x"
-                name="Transaction Amount (Bubble Size)"
-                range={[10, 200]}
-                scale="linear" // or "sqrt" if all amounts are positive
-              />
-  
-              <Tooltip />
-              <Legend />
-  
-              {Object.entries(clusterColours).map(([cluster, colour]) => (
-                <Scatter
-                  key={cluster}
-                  name={`Cluster ${cluster}`}
-                  data={clusterData.filter((d) => d.cluster === Number(cluster))}
-                  fill={colour}
-                  stroke="#fff"
-                  strokeWidth={1.5}
-                />
-              ))}
-            </ScatterChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+      <div
+        className={cn(
+          "min-w-[12rem] p-3 rounded-lg border bg-background text-xs shadow-md",
+          "border-border/50 text-foreground"
+        )}
+      >
+        <div className="mb-1 text-sm font-medium">Cluster Group {data.cluster}</div>
+        <div className="grid gap-1.5">
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Transaction Amount:</span>
+            <span className="font-mono font-semibold">£{data.x.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Customer Segment:</span>
+            <span className="font-semibold">{data.y}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Transaction Count:</span>
+            <span className="font-mono font-semibold">{data.size}</span>
+          </div>
+        </div>
+      </div>
     );
   }
+  return null;
+};
+
+export default function KMedoidsScatterPlot() {
+  const [clusterData, setClusterData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [zoomLevel, setZoomLevel] = useState("all");
+
+  useEffect(() => {
+    fetch("/recharts_data.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setClusterData(data);
+        setFilteredData(data); // Default to all data
+      });
+  }, []);
+
+  // Assign a unique colour per cluster
+  const clusterColours = {
+    0: "hsl(var(--chart-2))",
+    1: "hsl(var(--chart-3))",
+    2: "hsl(var(--chart-5))",
+    3: "hsl(var(--chart-4))",
+    4: "hsl(var(--chart-1))",
+  };
+
+  // Filter Data for "Zoom" Effect
+  const filterData = (range) => {
+    setZoomLevel(range);
+    if (range === "all") {
+      setFilteredData(clusterData);
+    } else if (range === "low") {
+      setFilteredData(clusterData.filter((d) => d.x < 100));
+    } else if (range === "mid") {
+      setFilteredData(clusterData.filter((d) => d.x >= 100 && d.x <= 500));
+    } else if (range === "high") {
+      setFilteredData(clusterData.filter((d) => d.x > 500));
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Customer Segmentation (K-Medoids)</CardTitle>
+        <CardDescription>
+          Clustered customer segments based on transaction behaviour.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {/* Centered Zoom Controls */}
+        <div className="flex justify-center gap-2 mb-4">
+          <Button variant={zoomLevel === "all" ? "default" : "outline"} onClick={() => filterData("all")}>
+            All
+          </Button>
+          <Button variant={zoomLevel === "low" ? "default" : "outline"} onClick={() => filterData("low")}>
+            Low (£-320 - £100)
+          </Button>
+          <Button variant={zoomLevel === "mid" ? "default" : "outline"} onClick={() => filterData("mid")}>
+            Mid (£100 - £500)
+          </Button>
+          <Button variant={zoomLevel === "high" ? "default" : "outline"} onClick={() => filterData("high")}>
+            High (£500+)
+          </Button>
+        </div>
+
+        <ResponsiveContainer width="100%" height={400}>
+          <ScatterChart margin={{ top: 10, right: 30, left: 15, bottom: 5 }}>
+            <XAxis
+              dataKey="x"
+              name="Transaction Amount"
+              type="number"
+              label={{
+                value: "Transaction Amount (GBP)",
+                position: "insideBottomRight",
+                offset: -20,
+              }}
+            />
+            <YAxis
+              dataKey="y"
+              name="Age Group"
+              type="category"
+              allowDuplicatedCategory={false}
+              label={{
+                value: "Age Group",
+                angle: -90,
+                position: "insideLeft",
+                offset: -5,
+              }}
+            />
+            {/* Make bubbles bigger dynamically */}
+            <ZAxis dataKey="size" range={[300, 300]} />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend  />
+
+            {Object.entries(clusterColours).map(([cluster, colour]) => (
+              <Scatter
+                key={cluster}
+                name={`Cluster ${cluster}`}
+                data={filteredData.filter((d) => d.cluster === Number(cluster))}
+                fill={colour}
+                stroke="#fff"
+                strokeWidth={1.5}
+              />
+            ))}
+          </ScatterChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
+  );
+}
